@@ -1,0 +1,19 @@
+<p-table [value]="historics" responsiveLayout="scroll">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Expresion</th>
+            <th>Resultado</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-historic>
+        <tr>
+            <td> {{historic.exprestion}} </td>
+            <td> {{historic.result}} </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="4"> No se encontraron historicos.</td>
+        </tr>
+    </ng-template>
+</p-table>

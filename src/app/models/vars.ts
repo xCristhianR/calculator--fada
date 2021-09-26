@@ -1,0 +1,1 @@
+export interface Vars { key?: string, value?: number }

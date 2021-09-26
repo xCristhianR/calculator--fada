@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Historic } from './models/historic';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,11 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Calculator-FADA';
+  public historics: Historic[] = []
+
+  public recivedHistoric(event: any) {
+    this.historics = event;
+    console.log(event, 'Evento recibido');
+  }
+
 }
