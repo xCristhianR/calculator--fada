@@ -53,10 +53,8 @@ export class CalculadoraComponent implements OnInit {
   action() {
     if (this.operation) {
       this.operar(this.operation);
-      //this.result = eval(this.operation);
       let historic: Historic = { exprestion: this.operation, result: this.result };
       this.historics.push(historic);
-      // this.onEmiiter.next(this.historics);
       console.log(this.historics);
     }
     this.ref.markForCheck();
@@ -68,21 +66,22 @@ export class CalculadoraComponent implements OnInit {
     if (this.balance(op)) {
       while (op.includes('(') && op.includes(')')) {
         for (let index = 0; index < op.length; index++) {
-          if (op[index] == '(') {
+          if (op[index] === '(') {
             parentesisAbierto = index;
           }
-          else if (op[index] == ')') {
+          else if (op[index] === ')') {
             parentesisCerrado = index;
             let replace = op.substring(parentesisAbierto, parentesisCerrado + 1);
             let ope = op.substring(parentesisAbierto+1, parentesisCerrado);
             this.operar(ope);
             console.log(replace);
-            op = op.replace(replace, this.result)/*eval(replace)*/;
+            op = op.replace(replace, this.result);
             console.log(op);
+            index=-1;
           }
         }
       }
-    } else alert('Hp te faltan parentesis boquefa')
+    } else alert('te faltan parentesis')
   }
 
   operar(op: string) {
@@ -91,19 +90,10 @@ export class CalculadoraComponent implements OnInit {
       this.parentesis(op);
     }
     else {
-      //this.result = eval(op);
       let i=0;
       while(i<op.length){
         if(op[i]==='^'){
-          let iz=this.sacarI(op,i);
-          let de=this.sacarD(op,i);
-          let r= Math.pow(parseFloat(iz[0]),parseFloat(de[0]));
-          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
-          console.log(replace);
-          this.result=r.toString();
-          console.log("resultado: "+this.result)
-          op = op.replace(replace, this.result);
-          console.log(op);
+          op=this.calculos(op,i,op[i]);
           i=0;
         }else{
           i++;
@@ -112,15 +102,7 @@ export class CalculadoraComponent implements OnInit {
       i=0;
       while(i<op.length){
         if(op[i]==='*'){
-          let iz=this.sacarI(op,i);
-          let de=this.sacarD(op,i);
-          let r= parseFloat(iz[0])*parseFloat(de[0]);
-          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
-          console.log(replace);
-          this.result=r.toString();
-          console.log("resultado: "+this.result)
-          op = op.replace(replace, this.result);
-          console.log(op);
+          op=this.calculos(op,i,op[i]);
           i=0;
         }else{
           i++;
@@ -129,15 +111,7 @@ export class CalculadoraComponent implements OnInit {
       i=0;
       while(i<op.length){
         if(op[i]==='/'){
-          let iz=this.sacarI(op,i);
-          let de=this.sacarD(op,i);
-          let r= parseFloat(iz[0])/parseFloat(de[0]);
-          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
-          console.log(replace);
-          this.result=r.toString();
-          console.log("resultado: "+this.result)
-          op = op.replace(replace, this.result);
-          console.log(op);
+          op=this.calculos(op,i,op[i]);
           i=0;
         }else{
           i++;
@@ -146,15 +120,7 @@ export class CalculadoraComponent implements OnInit {
       i=0;
       while(i<op.length){
         if(op[i]==='+'){
-          let iz=this.sacarI(op,i);
-          let de=this.sacarD(op,i);
-          let r= parseFloat(iz[0])+parseFloat(de[0]);
-          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
-          console.log(replace);
-          this.result=r.toString();
-          console.log("resultado: "+this.result)
-          op = op.replace(replace, this.result);
-          console.log(op);
+          op=this.calculos(op,i,op[i]);
           i=0;
         }else{
           i++;
@@ -163,15 +129,7 @@ export class CalculadoraComponent implements OnInit {
       i=0;
       while(i<op.length){
         if(op[i]==='-'){
-          let iz=this.sacarI(op,i);
-          let de=this.sacarD(op,i);
-          let r= parseFloat(iz[0])-parseFloat(de[0]);
-          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
-          console.log(replace);
-          this.result=r.toString();
-          console.log("resultado: "+this.result)
-          op = op.replace(replace, this.result);
-          console.log(op);
+          op=this.calculos(op,i,op[i]);
           i=0;
         }else{
           i++;
@@ -242,6 +200,30 @@ export class CalculadoraComponent implements OnInit {
     else p[1]= aux.toString();
     console.log('de '+p[0]+','+p[1]);
     return p;
+  }
+
+  private calculos(op: string, i:number, t:string):string{
+    let iz=this.sacarI(op,i);
+    let de=this.sacarD(op,i);
+    let r=0;
+    if(t==='^'){
+      r= Math.pow(parseFloat(iz[0]),parseFloat(de[0]));
+    }else if(t==='*'){
+      r= parseFloat(iz[0])*parseFloat(de[0]);
+    }else if(t==='/'){
+      r= parseFloat(iz[0])/parseFloat(de[0]);
+    }else if(t==='+'){
+      r= parseFloat(iz[0])+parseFloat(de[0]);
+    }else if(t==='-'){
+      r= parseFloat(iz[0])-parseFloat(de[0]);
+    }
+    let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
+    console.log(replace);
+    this.result=r.toString();
+    console.log("resultado: "+this.result)
+    op = op.replace(replace, this.result);
+    console.log(op);
+    return op;
   }
 
   /*private negativo(op:string):string{
