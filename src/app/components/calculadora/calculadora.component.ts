@@ -53,7 +53,7 @@ export class CalculadoraComponent implements OnInit {
   action() {
     if (this.operation) {
       this.operar(this.operation);
-      this.result = eval(this.operation);
+      //this.result = eval(this.operation);
       let historic: Historic = { exprestion: this.operation, result: this.result };
       this.historics.push(historic);
       // this.onEmiiter.next(this.historics);
@@ -74,8 +74,10 @@ export class CalculadoraComponent implements OnInit {
           else if (op[index] == ')') {
             parentesisCerrado = index;
             let replace = op.substring(parentesisAbierto, parentesisCerrado + 1);
+            let ope = op.substring(parentesisAbierto+1, parentesisCerrado);
+            this.operar(ope);
             console.log(replace);
-            op = op.replace(replace, eval(replace));
+            op = op.replace(replace, this.result)/*eval(replace)*/;
             console.log(op);
           }
         }
@@ -84,11 +86,97 @@ export class CalculadoraComponent implements OnInit {
   }
 
   operar(op: string) {
-    if (1 < op.split("(").length) {
+    if (1 < op.split('(').length) {
+      op= '('+op+')';
       this.parentesis(op);
     }
     else {
-      this.result = eval(op);
+      //this.result = eval(op);
+      let i=0;
+      while(i<op.length){
+        if(op[i]==='^'){
+          let iz=this.sacarI(op,i);
+          let de=this.sacarD(op,i);
+          let r= Math.pow(parseFloat(iz[0]),parseFloat(de[0]));
+          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
+          console.log(replace);
+          this.result=r.toString();
+          console.log("resultado: "+this.result)
+          op = op.replace(replace, this.result);
+          console.log(op);
+          i=0;
+        }else{
+          i++;
+        } 
+      }
+      i=0;
+      while(i<op.length){
+        if(op[i]==='*'){
+          let iz=this.sacarI(op,i);
+          let de=this.sacarD(op,i);
+          let r= parseFloat(iz[0])*parseFloat(de[0]);
+          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
+          console.log(replace);
+          this.result=r.toString();
+          console.log("resultado: "+this.result)
+          op = op.replace(replace, this.result);
+          console.log(op);
+          i=0;
+        }else{
+          i++;
+        } 
+      }
+      i=0;
+      while(i<op.length){
+        if(op[i]==='/'){
+          let iz=this.sacarI(op,i);
+          let de=this.sacarD(op,i);
+          let r= parseFloat(iz[0])/parseFloat(de[0]);
+          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
+          console.log(replace);
+          this.result=r.toString();
+          console.log("resultado: "+this.result)
+          op = op.replace(replace, this.result);
+          console.log(op);
+          i=0;
+        }else{
+          i++;
+        } 
+      }
+      i=0;
+      while(i<op.length){
+        if(op[i]==='+'){
+          let iz=this.sacarI(op,i);
+          let de=this.sacarD(op,i);
+          let r= parseFloat(iz[0])+parseFloat(de[0]);
+          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
+          console.log(replace);
+          this.result=r.toString();
+          console.log("resultado: "+this.result)
+          op = op.replace(replace, this.result);
+          console.log(op);
+          i=0;
+        }else{
+          i++;
+        } 
+      }
+      i=0;
+      while(i<op.length){
+        if(op[i]==='-'){
+          let iz=this.sacarI(op,i);
+          let de=this.sacarD(op,i);
+          let r= parseFloat(iz[0])-parseFloat(de[0]);
+          let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
+          console.log(replace);
+          this.result=r.toString();
+          console.log("resultado: "+this.result)
+          op = op.replace(replace, this.result);
+          console.log(op);
+          i=0;
+        }else{
+          i++;
+        } 
+      }
     }
   }
 
@@ -106,5 +194,70 @@ export class CalculadoraComponent implements OnInit {
     }
     return parentesisAbierto == parentesisCerrado ? true : false;
   }
+
+  private sacarI(op: string, s :any):any{
+    let p = ['',''];
+    let aux = 0;
+    console.log(s);
+    while (s > 0){
+      if(Number.isInteger(parseInt(op[s-1]))){
+        p[0]=op[s-1]+p[0];
+        console.log(p[0]);
+        s--;
+      }else if(op[s-1]==='.'){
+        p[0]=op[s-1]+p[0];
+        console.log(p[0]);
+        s--;
+      }else {
+        aux=s;
+        s=0;
+      }
+    }
+    if(aux==0){
+      p[1]='0'
+    }
+    else p[1]= aux.toString();
+    console.log('iz '+p[0]+','+p[1]);
+    return p;
+  }
+
+  private sacarD(op: string, s :any):any{
+    let p = ["",""];
+    let aux = 0
+    while(s<(op.length-1)){
+      if(Number.isInteger(parseInt(op[s+1]))){
+        p[0]=p[0]+op[s+1];
+        s++;
+      }else if(op[s+1]==='.'){
+        p[0]=p[0]+op[s+1];
+        s++;
+      }else{
+        aux=s;
+        s=op.length;
+      } 
+    }
+    if(aux==0){
+      p[1] = (op.length-1).toString();
+    }
+    else p[1]= aux.toString();
+    console.log('de '+p[0]+','+p[1]);
+    return p;
+  }
+
+  /*private negativo(op:string):string{
+    let i=1;
+    while(i<(op.length-1)){
+      if(!Number.isInteger(parseInt(op[i]))){
+        if(op[i]==='.'){
+          i++;
+        }else{
+          op="(0"+op.substring(0,i)+")"+op.substring(i,op.length);
+          console.log(op);
+          i=op.length;
+        }
+      }else i++;
+    }
+    return op;
+  }*/
 
 }
