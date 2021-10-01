@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Historic } from 'src/app/models/historic';
 import { Vars } from 'src/app/models/vars';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class CalculadoraComponent implements OnInit {
   public variable: Vars = { key: '', value: '' };
   @Output() onEmiiter: EventEmitter<Historic[]> = new EventEmitter();
 
-  constructor(private ref: ChangeDetectorRef) { }
+  constructor(private ref: ChangeDetectorRef, private messageService: MessageService) { }
 
   ngOnInit(): void {
   }
@@ -45,7 +46,6 @@ export class CalculadoraComponent implements OnInit {
     this.operation = this.operation.substring(0, this.operation.length - 1);
     if (this.operation == '') {
       this.operation = '0';
-
     }
     this.ref.markForCheck();
   }
@@ -55,7 +55,7 @@ export class CalculadoraComponent implements OnInit {
       this.operar(this.operation);
       let historic: Historic = { exprestion: this.operation, result: this.result };
       this.historics.push(historic);
-      console.log(this.historics);
+      this.addSingle('success', 'La operacion se ralizo', `La operacion ${this.operation} se realizo correctamente`)
     }
     this.ref.markForCheck();
   }
@@ -236,6 +236,7 @@ export class CalculadoraComponent implements OnInit {
     this.display = false;
     this.variable.key = '';
     this.variable.value = '';
+    this.addSingle('success', 'Se agrego la variable', `La variable ${vrs.key} se agrego correctamente`)
     this.ref.markForCheck();
   }
 
@@ -243,6 +244,15 @@ export class CalculadoraComponent implements OnInit {
   onrecived(event: { data: Vars, type: string }) {
     if (event.type == 'use') {
       this.operation == '0' ? this.operation = event.data.value : this.operation += event.data.value;
+    }
+    else if (event.type == 'delete') {
+      for (var i = 0; i < this.variables.length; i++) {
+        if (this.variables[i] === event.data) {
+          console.log(this.variables.splice(i, 1));
+        }
+      }
+      this.addSingle('info', 'Se elimino la variable', `La variable ${event.data.key} se elimino correctamente`);
+      this.ref.markForCheck();
     }
   }
 
@@ -252,5 +262,11 @@ export class CalculadoraComponent implements OnInit {
     this.variable.value = this.operation;
     this.ref.markForCheck();
   }
+
+  addSingle(severity: string, summary: string, detail: string) {
+    this.messageService.add({ severity: severity, summary: summary, detail: detail });
+  }
+
+
 
 }

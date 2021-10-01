@@ -5,6 +5,7 @@ import {FormsModule} from '@angular/forms';
 import { TableHistoricModule } from '../table-historic/table-historic.module';
 import { TableVarsModule } from '../table-vars/table-vars.module';
 import { DialogModule } from 'primeng/dialog';
+import {ToastModule} from 'primeng/toast';
 
 @NgModule({
   declarations: [CalculadoraComponent],
