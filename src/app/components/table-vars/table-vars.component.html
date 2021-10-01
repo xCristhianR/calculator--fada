@@ -11,9 +11,9 @@
             <td> {{vari.key}} </td>
             <td> {{vari.value}} </td>
             <td>
-                <button class="button"> agg 
+                <button class="button is-rounded is-primary" (click)="onEmiter(vari, 'use')"> Usar 
                 </button>
-                <button class="button"> eli </button>
+                <button class="button is-rounded is-danger" (click)="onEmiter(vari, 'delete')"> Eliminar </button>
             </td>
         </tr>
     </ng-template>

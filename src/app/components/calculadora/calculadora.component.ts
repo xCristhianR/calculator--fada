@@ -11,18 +11,18 @@ import { Vars } from 'src/app/models/vars';
 })
 export class CalculadoraComponent implements OnInit {
 
-  public operation: string = '0';
+  public operation: any = '0';
   public historics: Historic[] = [];
   public variables: Vars[] = [];
   public result: string = '';
+  public display: boolean = false;
+  public variable: Vars = { key: '', value: '' };
   @Output() onEmiiter: EventEmitter<Historic[]> = new EventEmitter();
 
   constructor(private ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
   }
-
-
 
   public aggNumber(number: string) {
     if (this.operation == '0') {
@@ -72,12 +72,12 @@ export class CalculadoraComponent implements OnInit {
           else if (op[index] === ')') {
             parentesisCerrado = index;
             let replace = op.substring(parentesisAbierto, parentesisCerrado + 1);
-            let ope = op.substring(parentesisAbierto+1, parentesisCerrado);
+            let ope = op.substring(parentesisAbierto + 1, parentesisCerrado);
             this.operar(ope);
             console.log(replace);
             op = op.replace(replace, this.result);
             console.log(op);
-            index=-1;
+            index = -1;
           }
         }
       }
@@ -86,54 +86,54 @@ export class CalculadoraComponent implements OnInit {
 
   operar(op: string) {
     if (1 < op.split('(').length) {
-      op= '('+op+')';
+      op = '(' + op + ')';
       this.parentesis(op);
     }
     else {
-      let i=0;
-      while(i<op.length){
-        if(op[i]==='^'){
-          op=this.calculos(op,i,op[i]);
-          i=0;
-        }else{
+      let i = 0;
+      while (i < op.length) {
+        if (op[i] === '^') {
+          op = this.calculos(op, i, op[i]);
+          i = 0;
+        } else {
           i++;
-        } 
+        }
       }
-      i=0;
-      while(i<op.length){
-        if(op[i]==='*'){
-          op=this.calculos(op,i,op[i]);
-          i=0;
-        }else{
+      i = 0;
+      while (i < op.length) {
+        if (op[i] === '*') {
+          op = this.calculos(op, i, op[i]);
+          i = 0;
+        } else {
           i++;
-        } 
+        }
       }
-      i=0;
-      while(i<op.length){
-        if(op[i]==='/'){
-          op=this.calculos(op,i,op[i]);
-          i=0;
-        }else{
+      i = 0;
+      while (i < op.length) {
+        if (op[i] === '/') {
+          op = this.calculos(op, i, op[i]);
+          i = 0;
+        } else {
           i++;
-        } 
+        }
       }
-      i=0;
-      while(i<op.length){
-        if(op[i]==='+'){
-          op=this.calculos(op,i,op[i]);
-          i=0;
-        }else{
+      i = 0;
+      while (i < op.length) {
+        if (op[i] === '+') {
+          op = this.calculos(op, i, op[i]);
+          i = 0;
+        } else {
           i++;
-        } 
+        }
       }
-      i=0;
-      while(i<op.length){
-        if(op[i]==='-'){
-          op=this.calculos(op,i,op[i]);
-          i=0;
-        }else{
+      i = 0;
+      while (i < op.length) {
+        if (op[i] === '-') {
+          op = this.calculos(op, i, op[i]);
+          i = 0;
+        } else {
           i++;
-        } 
+        }
       }
     }
   }
@@ -153,93 +153,104 @@ export class CalculadoraComponent implements OnInit {
     return parentesisAbierto == parentesisCerrado ? true : false;
   }
 
-  private sacarI(op: string, s :any):any{
-    let p = ['',''];
+  private sacarI(op: string, s: any): any {
+    let p = ['', ''];
     let aux = 0;
     console.log(s);
-    while (s > 0){
-      if(Number.isInteger(parseInt(op[s-1]))){
-        p[0]=op[s-1]+p[0];
+    while (s > 0) {
+      if (Number.isInteger(parseInt(op[s - 1]))) {
+        p[0] = op[s - 1] + p[0];
         console.log(p[0]);
         s--;
-      }else if(op[s-1]==='.'){
-        p[0]=op[s-1]+p[0];
+      } else if (op[s - 1] === '.') {
+        p[0] = op[s - 1] + p[0];
         console.log(p[0]);
         s--;
-      }else {
-        aux=s;
-        s=0;
+      } else {
+        aux = s;
+        s = 0;
       }
     }
-    if(aux==0){
-      p[1]='0'
+    if (aux == 0) {
+      p[1] = '0'
     }
-    else p[1]= aux.toString();
-    console.log('iz '+p[0]+','+p[1]);
+    else p[1] = aux.toString();
+    console.log('iz ' + p[0] + ',' + p[1]);
     return p;
   }
 
-  private sacarD(op: string, s :any):any{
-    let p = ["",""];
+  private sacarD(op: string, s: any): any {
+    let p = ["", ""];
     let aux = 0
-    while(s<(op.length-1)){
-      if(Number.isInteger(parseInt(op[s+1]))){
-        p[0]=p[0]+op[s+1];
+    while (s < (op.length - 1)) {
+      if (Number.isInteger(parseInt(op[s + 1]))) {
+        p[0] = p[0] + op[s + 1];
         s++;
-      }else if(op[s+1]==='.'){
-        p[0]=p[0]+op[s+1];
+      } else if (op[s + 1] === '.') {
+        p[0] = p[0] + op[s + 1];
         s++;
-      }else{
-        aux=s;
-        s=op.length;
-      } 
+      } else {
+        aux = s;
+        s = op.length;
+      }
     }
-    if(aux==0){
-      p[1] = (op.length-1).toString();
+    if (aux == 0) {
+      p[1] = (op.length - 1).toString();
     }
-    else p[1]= aux.toString();
-    console.log('de '+p[0]+','+p[1]);
+    else p[1] = aux.toString();
+    console.log('de ' + p[0] + ',' + p[1]);
     return p;
   }
 
-  private calculos(op: string, i:number, t:string):string{
-    let iz=this.sacarI(op,i);
-    let de=this.sacarD(op,i);
-    let r=0;
-    if(t==='^'){
-      r= Math.pow(parseFloat(iz[0]),parseFloat(de[0]));
-    }else if(t==='*'){
-      r= parseFloat(iz[0])*parseFloat(de[0]);
-    }else if(t==='/'){
-      r= parseFloat(iz[0])/parseFloat(de[0]);
-    }else if(t==='+'){
-      r= parseFloat(iz[0])+parseFloat(de[0]);
-    }else if(t==='-'){
-      r= parseFloat(iz[0])-parseFloat(de[0]);
+  private calculos(op: string, i: number, t: string): string {
+    let iz = this.sacarI(op, i);
+    let de = this.sacarD(op, i);
+    let r = 0;
+    if (t === '^') {
+      r = Math.pow(parseFloat(iz[0]), parseFloat(de[0]));
+    } else if (t === '*') {
+      r = parseFloat(iz[0]) * parseFloat(de[0]);
+    } else if (t === '/') {
+      r = parseFloat(iz[0]) / parseFloat(de[0]);
+    } else if (t === '+') {
+      r = parseFloat(iz[0]) + parseFloat(de[0]);
+    } else if (t === '-') {
+      r = parseFloat(iz[0]) - parseFloat(de[0]);
     }
     let replace = op.substring(parseInt(iz[1]), parseInt(de[1]) + 1);
     console.log(replace);
-    this.result=r.toString();
-    console.log("resultado: "+this.result)
+    this.result = r.toString();
+    console.log("resultado: " + this.result)
     op = op.replace(replace, this.result);
     console.log(op);
     return op;
   }
 
-  /*private negativo(op:string):string{
-    let i=1;
-    while(i<(op.length-1)){
-      if(!Number.isInteger(parseInt(op[i]))){
-        if(op[i]==='.'){
-          i++;
-        }else{
-          op="(0"+op.substring(0,i)+")"+op.substring(i,op.length);
-          console.log(op);
-          i=op.length;
-        }
-      }else i++;
+  displayDialog() {
+    this.display = true;
+  }
+
+  aggVariable(vrs: any) {
+    let v: Vars = { key: vrs.key, value: vrs.value };
+    this.variables.push(v);
+    this.display = false;
+    this.variable.key = '';
+    this.variable.value = '';
+    this.ref.markForCheck();
+  }
+
+
+  onrecived(event: { data: Vars, type: string }) {
+    if (event.type == 'use') {
+      this.operation == '0' ? this.operation = event.data.value : this.operation += event.data.value;
     }
-    return op;
-  }*/
+  }
+
+  aggResult() {
+    this.displayDialog();
+    console.log(this.operation, 'operation');
+    this.variable.value = this.operation;
+    this.ref.markForCheck();
+  }
 
 }

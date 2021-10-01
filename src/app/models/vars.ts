@@ -1,1 +1,1 @@
-export interface Vars { key?: string, value?: number }
+export interface Vars { key?: string, value?: string }

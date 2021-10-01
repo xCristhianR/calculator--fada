@@ -4,6 +4,7 @@ import { CalculadoraComponent } from './calculadora.component';
 import {FormsModule} from '@angular/forms';
 import { TableHistoricModule } from '../table-historic/table-historic.module';
 import { TableVarsModule } from '../table-vars/table-vars.module';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [CalculadoraComponent],
@@ -11,7 +12,8 @@ import { TableVarsModule } from '../table-vars/table-vars.module';
     CommonModule,
     FormsModule,
     TableHistoricModule,
-    TableVarsModule
+    TableVarsModule,
+    DialogModule
   ],
   exports: [CalculadoraComponent]
 })

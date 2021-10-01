@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Vars } from '../../models/vars';
 
 @Component({
@@ -8,13 +8,15 @@ import { Vars } from '../../models/vars';
 })
 export class TableVarsComponent implements OnInit {
 
-  @Input() vars: Vars[] = [
-    {key: 'Hola', value: 123}
-  ];
+  @Input() vars!: Vars[];
+  @Output() onEmiiter: EventEmitter<{ data: Vars, type: string }> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  onEmiter(_vari: any, type: string) {
+    this.onEmiiter.next({data: _vari, type});
+  }
 }

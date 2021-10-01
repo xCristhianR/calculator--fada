@@ -1,12 +1,12 @@
 <div class="asd">
     <div class="historic box mr-4">
-        <span class="titles is-3"> Historias de operaciones</span>
+        <span class="title "> <i class="pi pi-plus title"></i> Historias de operaciones</span>
         <app-table-historic [historics]="historics"></app-table-historic>
     </div>
     <div class="calculadora">
         <div class="display">
-            <div id="valor-anterior">asdasd
-                <input type="text" [(ngModel)]="operation">
+            <div id="valor-anterior">
+                <input type="text" class="input" [(ngModel)]="operation">
             </div>
             <div class="result">
                 <span class="block">{{result}}</span>
@@ -15,7 +15,7 @@
         <button class="col-2" (click)="deleteAll()">C</button>
         <button (click)="deleteOne()">
             <-- </button>
-        <button class="operador" value="dividir" (click)="aggNumber('%')">%</button>
+        <button class="operador" value="dividir" (click)="aggNumber('/')">/</button>
         <button class="numero" (click)="aggNumber('(')">(</button>
         <button class="numero" (click)="aggNumber('7')">7</button>
         <button class="numero" (click)="aggNumber('8')">8</button>
@@ -26,20 +26,38 @@
         <button class="numero" (click)="aggNumber('5')">5</button>
         <button class="is-primary" (click)="aggNumber('6')">6</button>
         <button class="operador" (click)="aggNumber('-')">-</button>
-        <button class="numero">AggV</button>
+        <button class="numero" (click)="displayDialog()">AggV</button>
         <button class="numero" (click)="aggNumber('1')">1</button>
         <button class="numero" (click)="aggNumber('2')">2</button>
         <button class="numero" (click)="aggNumber('3')">3</button>
         <button class="operador" (click)="aggNumber('+')">+</button>
-        <button class="numero">Vars</button>
+        <button class="numero" (click)="aggResult()">Vars</button>
         <button class="col-2 numero" (click)="aggNumber('0')">0</button>
         <button class="numero" (click)="aggNumber('.')">.</button>
         <button class="operador" (click)="action()">=</button>
-
+        <button class="numero" (click)="aggNumber('^')">^</button>
 
     </div>
     <div class="vars box ml-6">
-        <span class="titles is-3"> Variables</span>
-        <app-table-vars [vars]="variables"></app-table-vars>
+        <span class="title is-2"> <i class="pi pi-paperclip title is-2"></i> Variables</span>
+        <app-table-vars [vars]="variables" (onEmiiter)="onrecived($event)"></app-table-vars>
     </div>
 </div>
+
+<p-dialog header="Variables" [(visible)]="display" [modal]="true" [style]="{width: '50vw'}">
+    <div class="">
+        <div class="field">
+            <label class="label">Nombre</label>
+            <div class="control">
+                <input class="input" [(ngModel)]="variable.key" type="text" placeholder="Nombre de la variable">
+            </div>
+        </div>
+        <div class="field">
+            <label class="label">Valor</label>
+            <div class="control">
+                <input class="input" [(ngModel)]="variable.value" type="text" placeholder="Valor de la variable">
+            </div>
+        </div>
+        <button class="button is-primary" (click)="aggVariable(variable)"> Guardar </button>
+    </div>
+</p-dialog>
