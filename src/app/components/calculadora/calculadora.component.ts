@@ -74,7 +74,7 @@ export class CalculadoraComponent implements OnInit {
             let replace = op.substring(parentesisAbierto, parentesisCerrado + 1);
             let ope = op.substring(parentesisAbierto + 1, parentesisCerrado);
             this.operar(ope);
-            console.log(replace);
+            console.log(replace, this.result);
             op = op.replace(replace, this.result);
             console.log(op);
             index = -1;
